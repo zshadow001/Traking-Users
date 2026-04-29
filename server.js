@@ -47,7 +47,44 @@ app.get("/t/:id", (req, res) => {
     return res.send("Invalid Tracking ID");
   }
 
-  res.redirect(entry.targetUrl);
+  res.send(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading...</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <iframe src="${entry.targetUrl}"></iframe>
+
+  <script
+    data-tracking-id="${trackingId}"
+    data-server-url="https://analytics-bot-1-3j2c.onrender.com"
+    src="/script.js">
+  </script>
+
+</body>
+</html>
+`);
 
 });
 
