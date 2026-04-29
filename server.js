@@ -89,16 +89,40 @@ app.get("/t/:id", (req, res) => {
 });
 
 // Telegram Webhook
-app.post(`/bot${BOT_TOKEN}`, async (req, res) => {
+app.post("/data", async (req, res) => {
 
-  const msg = req.body.message;
-
-  if (!msg) return res.sendStatus(200);
-
-  const chatId = msg.chat.id;
-  const text = msg.text;
+  const { trackingId, pretty } = req.body;
 
   const db = loadDB();
+
+  const entry = db[trackingId];
+
+  if (!entry) {
+    return res.sendStatus(404);
+  }
+
+  const ownerChatId = entry.owner;
+
+  try {
+
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        chat_id: ownerChatId,
+        text: pretty || "No analytics data"
+      })
+    });
+
+  } catch (e) {
+    console.log(e);
+  }
+
+  res.sendStatus(200);
+
+});
 
   // START
   if (text === "/start") {
