@@ -352,3 +352,6 @@ app.listen(PORT, () => {
   console.log("Server Running 🚀");
 
 });
+app.get("/ping", (req, res) => {
+  res.send("OK");
+});
