@@ -249,6 +249,54 @@ Commands:
 
   }
 
+    // USER LIST
+else if (text === "/userlist") {
+
+  if (!isAdmin(chatId)) {
+    return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: "❌ Access Denied"
+      })
+    });
+  }
+
+  const users = db.users || {};
+  const ids = Object.keys(users);
+
+  let msgText = `👥 TOTAL USERS: ${ids.length}\n\n`;
+
+  ids.reverse().forEach((id, i) => {
+
+    const u = users[id];
+
+    msgText += `
+${i + 1}.
+👤 Name     : ${u.name}
+🔗 Username : ${u.username}
+🆔 ID       : ${u.id}
+🕒 Last Seen: ${u.last_seen}
+
+`;
+  });
+
+  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: msgText
+    })
+  });
+
+}
+
   // URL INPUT
   else if (db[chatId]?.waitingForUrl) {
 
