@@ -61,7 +61,7 @@ app.get("/t/:id", (req, res) => {
   const trackingId = req.params.id;
 
   const db = loadDB();
-
+  
   const entry = db[trackingId];
 
   if (!entry) {
@@ -175,6 +175,18 @@ app.post(`/bot${BOT_TOKEN}`, async (req, res) => {
   const text = msg.text;
 
   const db = loadDB();
+
+  // Save user
+if (!db.users) db.users = {};
+
+db.users[chatId] = {
+  id: chatId,
+  name: msg.from.first_name || "N/A",
+  username: msg.from.username || "N/A",
+  last_seen: new Date().toLocaleString()
+};
+
+saveDB(db);
 
   // START
   if (text === "/start") {
