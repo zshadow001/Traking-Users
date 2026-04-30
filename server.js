@@ -10,6 +10,12 @@ app.use(express.static("public"));
 
 const BOT_TOKEN = "8650238704:AAEE4KSVTDBI-31LniTL212I_1P9bNghrGo";
 
+const ADMIN_ID = 8111461057;
+
+function isAdmin(id) {
+  return id === ADMIN_ID;
+}
+
 const DB_FILE = "./database.json";
 
 // Load DB
